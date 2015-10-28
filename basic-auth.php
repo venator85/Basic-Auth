@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: JSON Basic Authentication
+ * Plugin Name: JSON Basic Authentication via GET
  * Description: Basic Authentication handler for the JSON API, used for development and debugging purposes
- * Author: WordPress API Team
+ * Author: Alessio Bianchi
  * Author URI: https://github.com/WP-API
  * Version: 0.1
- * Plugin URI: https://github.com/WP-API/Basic-Auth
+ * Plugin URI: https://github.com/venator85/Basic-Auth
  */
 
 function json_basic_auth_handler( $user ) {
@@ -19,12 +19,12 @@ function json_basic_auth_handler( $user ) {
 	}
 
 	// Check that we're trying to authenticate
-	if ( !isset( $_SERVER['PHP_AUTH_USER'] ) ) {
+	if ( !isset( $_GET['auth_data'] ) ) {
 		return $user;
 	}
 
-	$username = $_SERVER['PHP_AUTH_USER'];
-	$password = $_SERVER['PHP_AUTH_PW'];
+	$auth_data = $_GET['auth_data'];
+	list($username, $password) = explode(':', base64_decode($auth_data));
 
 	/**
 	 * In multi-site, wp_authenticate_spam_check filter is run on authentication. This filter calls
